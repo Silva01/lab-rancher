@@ -2,11 +2,16 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  config.vm.box = "debian"
+  config.vm.box = "debian/jessie64"
 
   config.vm.define :rancher do |rancher|
     rancher.vm.hostname = "rancher-server"
     rancher.vm.network :private_network, :ip => "192.168.12.2"
+    
+    rancher.vm.provider "virtualbox" do |r|
+      r.memory = 1024
+      r.cpus = 1
+    end
 
     rancher.vm.provision "docker" do |d|
       d.run "rancher", image: "rancher/server", args: "-d --restart=unless-stopped -p 8080:8080"
